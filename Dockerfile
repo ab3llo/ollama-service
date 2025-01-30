@@ -15,7 +15,7 @@ ENV OLLAMA_KEEP_ALLIVE -1
 
 # Store the model weights in the container image
 # Llamma 3.2 small models https://ollama.com/library/llama3.2
-ENV MODEL llama3.2:3b
+ENV MODEL llama3.2:1b
 RUN ollama serve & sleep 5 && ollama pull $MODEL
 
 ENTRYPOINT [ "ollama", "serve" ]
