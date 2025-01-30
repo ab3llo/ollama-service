@@ -37,5 +37,6 @@ jobs:
         region: 'europe-west2'
         env_vars: |-
           HTTP_PORT=8080
+        metadata: ./service.yaml
     - name: 'Use output'
       run: 'curl "${{ steps.deploy.outputs.url }}"'
