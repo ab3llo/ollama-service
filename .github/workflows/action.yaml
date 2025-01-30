@@ -1,0 +1,41 @@
+name: ollama deploy
+run-name: ${{ github.event.head_commit.message }}
+on: [push, pull_request]
+jobs:
+  deployment:
+    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps: 
+    - name: Checkout
+      uses: actions/checkout@v4
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        workload_identity_provider: ${{secrets.GCP_WORKLOAD_ID}}
+        service_account: ${{secrets.GCP_SERVICE_ACCOUNT}}
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+      with:
+        project_id: '${{secrets.GCP_PROJECT_ID }}'
+    - name: 'Docker auth'
+      run: |-
+        gcloud auth configure-docker europe-west2-docker.pkg.dev
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        push: true
+        tags: '${{secrets.GCP_ARTIFACT_REGISTRY}}/${{ github.event.repository.name }}:latest'
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-cloudrun@v2'
+      with:
+        service: '${{ github.event.repository.name }}'
+        image: '${{secrets.GCP_ARTIFACT_REGISTRY}}/${{ github.event.repository.name }}:latest'
+        region: 'europe-west2'
+        env_vars: |-
+          HTTP_PORT=8080
+    - name: 'Use output'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
