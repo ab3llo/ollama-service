@@ -18,4 +18,6 @@ ENV OLLAMA_KEEP_ALLIVE -1
 ENV MODEL llama3.2:1b
 RUN ollama serve & sleep 5 && ollama pull $MODEL
 
+EXPOSE 8080 
+
 ENTRYPOINT [ "ollama", "serve" ]
