@@ -2,7 +2,7 @@
 FROM ollama/ollama:0.5.7
 
 # Listen on all interfaces, port 8080
-ENV OLLAMA_HOST 0.0.0.0:8080
+ENV OLLAMA_HOST 0.0.0.0:8081
 
 # Store model weight files in /models
 ENV OLLAMA_MODELS /models
