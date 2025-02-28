@@ -36,6 +36,6 @@ jobs:
         image: '${{secrets.GCP_ARTIFACT_REGISTRY}}/${{ github.event.repository.name }}:latest'
         region: 'europe-west2'
         env_vars: |-
-          HTTP_PORT=8081
+          PORT=8081
     - name: 'Use output'
       run: 'curl "${{ steps.deploy.outputs.url }}"'
