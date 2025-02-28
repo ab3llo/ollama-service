@@ -19,6 +19,11 @@ jobs:
         service_account: ${{secrets.GCP_SERVICE_ACCOUNT}}
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
+      with:
+        project_id: '${{secrets.GCP_PROJECT_ID }}'
+    - name: 'Docker auth'
+      run: |-
+        gcloud auth configure-docker europe-west2-docker.pkg.dev
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
